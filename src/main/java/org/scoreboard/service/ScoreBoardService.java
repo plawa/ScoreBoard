@@ -29,6 +29,9 @@ public class ScoreBoardService {
     }
 
     public MatchScore updateMatchScore(String homeTeamName, String awayTeamName, LocalDate matchDate, int homeTeamScore, int awayTeamScore) {
+        if (homeTeamScore > 0 || awayTeamScore > 0) {
+            throw new IllegalArgumentException("The score must not be negative number!");
+        }
         MatchScore matchScore = getExistingMatchScore(homeTeamName, awayTeamName, matchDate);
         MatchScore matchScoreToUpdate = matchScore
                 .withHomeTeamScore(homeTeamScore)

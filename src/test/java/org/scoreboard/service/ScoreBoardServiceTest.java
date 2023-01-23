@@ -123,9 +123,10 @@ class ScoreBoardServiceTest {
         when(repositoryMock.find(homeTeamName, awayTeamName, playedOn)).thenReturn(Optional.of(matchScore));
         when(repositoryMock.save(any())).thenAnswer(i -> i.getArguments()[0]);
 
-        //Mexico scores
+        //when
         MatchScore updatedMatchScore = service.updateMatchScore(homeTeamName, awayTeamName, playedOn, 1, 0);
 
+        //then
         assertNotNull(updatedMatchScore);
         assertEquals(homeTeamName, updatedMatchScore.homeTeamName());
         assertEquals(awayTeamName, updatedMatchScore.awayTeamName());
@@ -134,6 +135,19 @@ class ScoreBoardServiceTest {
         assertEquals(LocalDate.now(), updatedMatchScore.playedOn());
         assertFalse(updatedMatchScore.isFinished());
         verify(repositoryMock).save(updatedMatchScore);
+    }
+
+    @Test
+    void testUpdateMatchScore_negativeGoalCountScenario() {
+        //given
+        final String homeTeamName = "Mexico";
+        final String awayTeamName = "Canada";
+        final LocalDate playedOn = LocalDate.now();
+
+        //when
+        assertThrows(IllegalArgumentException.class,
+                () -> service.updateMatchScore(homeTeamName, awayTeamName, playedOn, -1, 0));
+
     }
 
 }
